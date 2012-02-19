@@ -1,0 +1,141 @@
+var express = require('express');
+var http = require('http');
+var app = module.exports = express.createServer();
+var mysql = require('mysql');
+var HOSTNAME = 'localhost';
+var DBNAME = 'gtug_hackathon1';
+var DBUSER = 'root';
+var DBPASSWD = "kmkzhvn";
+var client = mysql.createClient({
+  user: DBUSER,
+  password: DBPASSWD,
+  host: HOSTNAME ,
+  database: DBNAME
+});
+
+// Configuration
+app.configure(function(){
+  app.set('views', __dirname + '/views');
+  app.set('view engine', 'ejs');
+  app.use(express.bodyParser());
+  app.use(express.methodOverride());
+  app.use(express.cookieParser());
+  // app.use(express.session({
+  //   store: store, 
+  //   secret: "keyboard cat",
+  //   cookie: { httpOnly: false }}));
+  app.use(app.router);
+  app.use(express.static(__dirname + '/public'));
+});
+
+app.configure('development', function(){
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+});
+
+app.configure('production', function(){
+  app.use(express.errorHander()); 
+});
+
+app.get('/', test);
+app.get('/init_database', initDatabase);
+app.get('/get_user_statuses', getUserStatuses);
+app.post('/set_user_status', setOrUpdateUserStatus);
+//app.post('/login_or_create_user', loginOrCreateUser);
+
+function getUserStatuses(request, response) {
+  var query = 'select * from user_table;';
+  client.query(
+    query,
+    function selectCb(err, results, fields) {
+      response.send(results);
+    });
+  
+  // var samples = [
+  //   [34.268288,135.151928,"ユーザ1",1],
+  //   [34.267929,135.151586,"ユーザ2",2],
+  //   [34.268227,135.151855,"ユーザ3",1]];
+
+  // var results = [];
+  // var i;
+  // for (i = 0;i < samples.length;i++) {
+  //   results.push({
+  //     x: samples[i][0],
+  //     y: samples[i][1],
+  //     userName: samples[i][2],
+  //     faceId: samples[i][3]     
+  //     });
+  // }
+  // console.log(results);
+  // response.send(results);
+}
+
+// function (request, response) {
+  
+// }
+
+function setOrUpdateUserStatus(request, response) {
+  var query = format2string('select * from user_table where userId=%1;',
+                            request.body.userId);
+  client.query(query, function selectCb(err, results, fields) {
+    if (err) {
+      console.log("error");
+      // var query = format2string('insert into user_table values(%4, 
+      //                           request.body.x, request.body.y,
+      //                           request.body.faceId, request.body.userId);
+      
+      // client.query(query,function selectCb(err, results, fields) {
+      //   res.send(results);      
+      // });
+      
+      throw err;
+    }
+    var query = format2string('update user_table set x=%1, y=%2, faceId=%3 where userId=%4;',
+                              request.body.x, request.body.y,
+                              request.body.faceId, request.body.userId);
+    
+    client.query(query,function selectCb(err, results, fields) {
+      res.send(results);      
+    });
+  });
+}
+
+function test(request, response) {
+  response.writeHead(200, {'Content-Type': 'text/plain'});
+  response.write('Hello World!!\n');
+  response.end();
+}
+
+function initDatabase(request, response) {
+  //  client.query('drop table user_table;');
+  client.query('create table user_table (id int primary key auto_increment, name char(30), date Date, face int, x int, y int);');
+
+  var samples = [
+    [1, 34.268288,135.151928,"ユーザ1",1],
+    [2, 34.267929,135.151586,"ユーザ2",2],
+    [3, 34.268227,135.151855,"ユーザ3",1]];
+
+var query = format2string('insert into user_table values(%4, 
+      //                           request.body.x, request.body.y,
+      //                           request.body.faceId, request.body.userId);
+      
+      // client.query(query,function selectCb(err, results, fields) {
+      //   res.send(results);      
+      // });
+  
+  response.writeHead(200, {'Content-Type': 'text/plain'});
+  response.write('Database initialization completed!!\n');
+  response.end();
+}
+
+function format2string(string) {
+  if (arguments.length === 0) {
+    throw 'Argument Exception';
+  }
+  var i;
+  for (i = 0; i < arguments.length; i++) {
+    string = string.replace('%' + i, arguments[i]);
+  }
+  return string;
+}
+
+app.listen(3000);
