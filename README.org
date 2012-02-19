@@ -1,7 +1,6 @@
 * Introduction
 This is an application which enable sharing your emotion.
 * Demo
-To send your emotion to server. Install and use [[apk file][https://github.com/ofuku3f/kyoto-emotion_map/blob/master/client/test.apk]]
+To send your emotion to server. Install and use [[https://github.com/ofuku3f/kyoto-emotion_map/blob/master/client/test.apk][the apk file]].\\
+To see a emotion map around kyoto research park. Access [[http://ec2-175-41-232-72.ap-northeast-1.compute.amazonaws.com:3000/][the URL]] via your browser.
 
-To see a emotion map around kyoto research park. Access to the following URL via your browser.
-http://ec2-175-41-232-72.ap-northeast-1.compute.amazonaws.com:3000/
