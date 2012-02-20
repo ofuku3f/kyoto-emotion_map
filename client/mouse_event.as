@@ -60,7 +60,6 @@ function mouse_move (e)
 }
 function mouse_up (e) 
 {
-	clear_flag = false;
 	if (click_flag == true)
 	{
 		if (move_flag == true)
@@ -76,6 +75,9 @@ function mouse_up (e)
 		click_flag = false;	
 		line = [];
 		curve = [];
+		
+		
+		clear_flag = false;
 	}
 }
 function mouse_down (e) 
@@ -128,62 +130,20 @@ function curve_point()
 
 function submit(e:MouseEvent) {
 	
+	if (candidate_icon.currentFrame==1)return;
+	
 	submit_button.scaleX = 
-		submit_button.scaleY = 0
+	submit_button.scaleY = 0
 	
 	this.alpha = 0;
-	/*
-	// CGI ページの URL
-	var url:String = "http://ec2-175-41-232-72.ap-northeast-1.compute.amazonaws.com:3000/set_user_status";
-	var url_request:URLRequest = new URLRequest(url);
-
-	// HTTP メソッドを指定する
-	url_request.method = URLRequestMethod.POST;
-
-	var variables:URLVariables = new URLVariables();
-    variables.x = location_now.x;
-	variables.y = location_now.y;
-	variables.userId = 1;
-	variables.faceId = candidate_icon.currentFrame - 2;
-*/
-	// URLVariables オブジェクトを URLRequest オブジェクトにセットする
-	//url_request.data = variables;
-
-//	navigateToURL( url_request);
-/*
-	url_Loader.dataFormat = URLLoaderDataFormat.VARIABLES;
-	url_Loader.addEventListener(Event.COMPLETE,completeHandler);
-	url_Loader.load(url_request);
-	var url_Loader:URLLoader = new URLLoader();
-*/
-	/*
-	var url2:URLRequest = new URLRequest( "http://ec2-175-41-232-72.ap-northeast-1.compute.amazonaws.com:3000/set_user_status" );
-	navigateToURL( url2);
-	*/
-/*
-
-	var variables:URLVariables = new URLVariables();
-    variables.x = location_now.x;
-	variables.y = location_now.y;
-	variables.face = candidate_icon.currentFrame;
-
-	var urlRequest:URLRequest = new URLRequest();
-    urlRequest.url = "variables.php";
-    urlRequest.method = URLRequestMethod.POST;
-    urlRequest.data = variables;
- 
-    //phpに送信
-	navigateToURL(url_request );
-	*/
 	
 	var url:URLRequest = new URLRequest( "http://ec2-175-41-232-72.ap-northeast-1.compute.amazonaws.com:3000/set_user_status?x="+location_now.x+"&y="+location_now.y+"&faceId="+(candidate_icon.currentFrame - 2)+"&userId=1");
     navigateToURL( url );
 	
+	NativeApplication.nativeApplication.exit(0);
 }
 
 function completeHandler(evt:Event):void{
  
-	var re_variables:URLVariables = new URLVariables( evt.target.data);
-	//trace(re_variables.comp);
-	gotoAndStop(2);
+	//var re_variables:URLVariables = new URLVariables( evt.target.data);
 }

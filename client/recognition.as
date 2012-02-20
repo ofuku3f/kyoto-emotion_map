@@ -5,8 +5,7 @@ var icon_code:Array = [
 					   "怒り",
 					   "がっかり",
 					   "泣き",
-					   "ハート",
-					   "","☓","△","□","!","?"];
+					   "ハート"];
 
 function recognition() 
 {
@@ -19,15 +18,7 @@ function recognition()
 	databox_reset ();
 
 	if ( dict.length == 1 )	search_reset ();
-	
-	if (numberic_checkbox.selected == true) 
-	{
-		search_max = 11;
-		if (combobox.value == "1")
-		{
-			load_dict();
-		}
-	}
+
 	for ( var n = 0;n<search_list.length;n++)			//文字の数
 	{
 		var i = 	search_list[n];
@@ -82,7 +73,10 @@ function recognition()
 	for (i = 0;i < icon_code.length;i++)
 		if (output == icon_code[i])
 		{
-			candidate_icon.alpha=1;
+			if (candidate_icon.currentFrame != i+2){
+				candidate_icon.scaleX = candidate_icon.scaleY = 3;
+				candidate_icon.alpha = 1;
+			}
 			candidate_icon.gotoAndStop(i + 2);
 		}
 }

@@ -17,7 +17,7 @@
 		g2.clear();
 		g.clear();
 		
-		clear_flag = false;
+		clear_flag = true;
 		
 		candidate_icon.gotoAndStop(1);
 		candidate_icon.alpha = 0.4;
